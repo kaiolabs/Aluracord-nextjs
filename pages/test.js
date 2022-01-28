@@ -1,6 +1,6 @@
-import { Box, Button, Text, TextField, Image, Icon } from '@skynexui/components';
-import { useRouter } from 'next/router';
+import { Box, Button, Text, TextField, Image } from '@skynexui/components';
 import React from 'react';
+import { useRouter } from 'next/router';
 import appConfig from '../config.json';
 
 function Titulo(props) {
@@ -13,7 +13,6 @@ function Titulo(props) {
                 color: ${appConfig.theme.colors.neutrals['000']};
                 font-size: 24px;
                 font-weight: 600;
-                text-align: center;
             }
             `}</style>
     </>
@@ -21,29 +20,30 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
+  // const username = 'kaiolabs';
   const [user, setUser] = React.useState('');
   const [dados, setDados] = React.useState(null);
   const roteamento = useRouter();
 
   React.useEffect(() => {
-    async function initFetch() {
-      try {
+    async function initFetch(){
+      try{
         const response = await fetch(`https://api.github.com/users/${user}`);
         const userJson = await response.json();
-        setDados(userJson);
+        setDados(userJson); 
       }
-      catch (e) {
+      catch(e){
         console.log(Error(e))
       }
     }
     initFetch();
   }, [user]);
 
-  function handleChange({ target }) {
+  function handleChange({target}){
     setUser(target.value);
   }
 
-  function handleSubimitChat(event) {
+  function handleSubimitChat(event){
     event.preventDefault();
     window.localStorage.setItem('user', user);
     roteamento.push('/chat');
@@ -51,13 +51,17 @@ export default function PaginaInicial() {
 
   return (
     <>
+
       <Box
         styleSheet={{
           display: 'flex', alignItems: 'center', justifyContent: 'center',
+          // backgroundColor: appConfig.theme.colors.primary[500],
           backgroundImage: 'url(https://wallpaperaccess.com/full/6272395.gif)',
           backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundBlendMode: 'multiply',
         }}
       >
+
+
         <Box
           styleSheet={{
             display: 'flex',
@@ -76,46 +80,25 @@ export default function PaginaInicial() {
 
             borderTop: '1px solid #ffffff80',
             borderLeft: '1px solid #ffffff80',
-
+    
           }}
         >
 
-          {/*Avatar*/}
-          <Box
-            styleSheet={{
-              margin: '32px 0 16px 0',
-              position: 'relative',
-              overflow: 'hidden',
-              borderRadius: '50%',
-            }}
 
-          >
-          </Box>
-          <Box
-            styleSheet={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center-between',
-              flexDirection: {
-                xs: 'column',
-                sm: 'row'
-              },
-              gap: '8px'
-            }}
-          >
-
-
-          </Box>
+          {/* Formulário */}
           <Box
             as="form"
-            onSubmit={handleSubimitChat}
-            styleSheet={{ width: '100%' }}
-
+            onSubmit={function (infosDoEvento) {
+              infosDoEvento.preventDefault();
+              roteamento.push('/chat');
+              // window.location.href = '/chat';
+            }}
             styleSheet={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
               width: { xs: '100%', sm: '50%' }, textAlign: 'center',
             }}
           >
+
 
             <Titulo tag="h2">Boas vindas de volta!</Titulo>
 
@@ -123,57 +106,44 @@ export default function PaginaInicial() {
               {appConfig.name}
             </Text>
 
+
             <TextField
               placeholder='Nome de usuário do Github'
-              fullWidth
               value={user}
-              onChange={handleChange}
+              onChange={function (event) {
+                // Onde ta o valor?
+                const valor = event.target.value;
+                // Trocar o valor da variavel
+                (valor);
+              }}
+              fullWidth
               textFieldColors={{
                 neutral: {
                   textColor: appConfig.theme.colors.neutrals[200],
-                  mainColor: '#101418',
-                  mainColorHighlight: '#7289D9',
+                  mainColor: appConfig.theme.colors.neutrals[900],
+                  mainColorHighlight: appConfig.theme.colors.primary[500],
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-              styleSheet={{
-                margin: '24px 0 0 0'
-              }}
             />
+
 
             <Button
               type='submit'
               label='Entrar'
               fullWidth
-              styleSheet={{ marginTop: '5px' }}
               buttonColors={{
                 contrastColor: appConfig.theme.colors.neutrals["000"],
-                mainColor: '#7289D9',
-                mainColorLight: '#4E6AD0',
-                mainColorStrong: '#4E6AD0',
+                mainColor: appConfig.theme.colors.primary[500],
+                mainColorLight: appConfig.theme.colors.primary[400],
+                mainColorStrong: appConfig.theme.colors.primary[600],
               }}
-            />
-
-          </Box>
-          {/*Formulário*/}
-
-          <Box
-          styleSheet={{
-            paddingLeft: '100px',
-          }}
-          >
-
-            <Image
               styleSheet={{
-                width: '180px',
-                height: '180px',
-                borderRadius: '50%',
+                margin: '10px',
+                borderRadius: '0.5em'
               }}
-              src={
-                `${user.length > 2
-                  ? `https://github.com/${user}.png`
-                  : 'https://raw.githubusercontent.com/GabrielLaminas/aluracord-space/19aa1a8c044da3ae427db7a5510fac85c9773f2c/public/undraw_male_avatar.svg'}`}
             />
+
           </Box>
         </Box>
       </Box>
